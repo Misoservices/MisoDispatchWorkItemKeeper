@@ -2,7 +2,7 @@
 
 ## Swift package to cancel async operations on class/struct deletion
 
-![Swift](https://github.com/Misoservices/MisoDispatchWorkItemKeeper/workflows/Swift/badge.svg)
+![Platform](https://img.shields.io/badge/platform-iOS%2013%20%7C%20macOS%2010.15%20%7C%20tvOS%2013-lightgrey) ![Swift](https://github.com/Misoservices/MisoDispatchWorkItemKeeper/workflows/Swift/badge.svg) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Misoservices_MisoDispatchWorkItemKeeper&metric=alert_status)](https://sonarcloud.io/dashboard?id=Misoservices_MisoDispatchWorkItemKeeper) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fb3979da0aa04eb6900c7ff2f22ae87a)](https://www.codacy.com/gh/Misoservices/MisoDispatchWorkItemKeeper?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Misoservices/MisoDispatchWorkItemKeeper&amp;utm_campaign=Badge_Grade) [![codecov](https://codecov.io/gh/Misoservices/MisoDispatchWorkItemKeeper/branch/master/graph/badge.svg)](https://codecov.io/gh/Misoservices/MisoDispatchWorkItemKeeper)
 
 ## SwiftUI's View disappearance
 
