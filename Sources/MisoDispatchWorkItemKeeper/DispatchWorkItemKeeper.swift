@@ -66,8 +66,7 @@ public extension DispatchWorkItemKeeper {
     init(_ runMode: RunMode = .automatic,
          autoCleanCount: Int = 10,
          cancelAtStop: Bool = true,
-         queueLabel: String = "com.misoservices.dispatchworkitemkeeper.queue.\(UUID().uuidString)")
-    {
+         queueLabel: String = "com.misoservices.dispatchworkitemkeeper.queue.\(UUID().uuidString)") {
         self.inner = InnerClass(autoCleanCount, cancelAtStop, queueLabel)
         
         if runMode == .automatic {
