@@ -112,14 +112,14 @@ final class BasicTests: XCTestCase {
             var value = 0
             func exec() {
                 let keeper = DispatchWorkItemKeeper(.manual, cancelAtStop: false, queueLabel: queueLabel)
-                for i in 0..<count {
-                    if i == startBefore {
+                for cur in 0..<count {
+                    if cur == startBefore {
                         keeper.start()
                     }
                     keeper.asyncAfter(in: queue, deadline: .now() + 0.1) {
                         value += 1
                     }
-                    if i == stopAfter {
+                    if cur == stopAfter {
                         keeper.stop()
                     }
                 }
@@ -149,14 +149,14 @@ final class BasicTests: XCTestCase {
             var value = 0
             func exec() {
                 let keeper = DispatchWorkItemKeeper(.manual, cancelAtStop: false, queueLabel: queueLabel)
-                for i in 0..<count {
-                    if i == startBefore {
+                for cur in 0..<count {
+                    if cur == startBefore {
                         keeper.start()
                     }
                     keeper.asyncAfter(in: queue, deadline: .now() + 0.1) {
                         value += 1
                     }
-                    if i == restartAfter {
+                    if cur == restartAfter {
                         keeper.stop(cancel: cancel)
                         keeper.start()
                     }
@@ -196,14 +196,14 @@ final class BasicTests: XCTestCase {
             var value = 0
             func exec() {
                 let keeper = DispatchWorkItemKeeper(.manual, cancelAtStop: false, queueLabel: queueLabel)
-                for i in 0..<count {
-                    if i == startBefore {
+                for cur in 0..<count {
+                    if cur == startBefore {
                         keeper.start()
                     }
                     keeper.asyncAfter(in: queue, deadline: .now() + 0.1) {
                         value += 1
                     }
-                    if i == ignoredRestartAfter {
+                    if cur == ignoredRestartAfter {
                         // Count should increment, then decrement, meaning it should do nothing
                         keeper.start()
                         keeper.stop(cancel: true)
@@ -234,11 +234,11 @@ final class BasicTests: XCTestCase {
             var value = 0
             func exec() {
                 let keeper = DispatchWorkItemKeeper(cancelAtStop: false, queueLabel: queueLabel)
-                for i in 0..<count {
+                for cur in 0..<count {
                     keeper.asyncAfter(in: queue, deadline: .now() + 0.1) {
                         value += 1
                     }
-                    if i == cancelAfter {
+                    if cur == cancelAfter {
                         keeper.cancelPending()
                     }
                 }
@@ -293,7 +293,7 @@ final class BasicTests: XCTestCase {
         
         func simpleRun(cleanCount: Int, queueLabel: String) -> Int {
             let keeper = DispatchWorkItemKeeper(autoCleanCount: 9999, queueLabel: queueLabel)
-            for i in 0..<25 {
+            for cur in 0..<25 {
                 keeper.async(in: queue) {
                     // nop. Only wait to be in a state where keeper has processed its addition
                 }
@@ -301,7 +301,7 @@ final class BasicTests: XCTestCase {
                     // nop. Only wait for the execution queue to be empty
                 }
                 _ = keeper.workItemsCount
-                if i+1 == cleanCount {
+                if cur+1 == cleanCount {
                     keeper.clean()
                 }
             }
