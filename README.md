@@ -68,18 +68,15 @@ struct MyView: View {
 }
 ```
 
-
 ## Using the code in Swift (not SwiftUI)
 
 Although the system was created with a simple SwiftUI task in mind, the code was modified to be usable in other class, and with multiple dispatch queues at the same time. Also, there are functionalities to limit memory leaks and complete execution before class is deleted. Hopefully, it will help people have less random issues with their code.
-
 
 ## Caveats
 
 This code was created for simplicity in mind. It will not be much of a bottleneck for most simple cases, but it is not meant to provide a solution on extreme cases, such as algorithmic massive parallelism or very long operations. You should profile after integrating a new API, especially one that marshalls dispatching of work items.
 
 There might be some bugs. Version 1.0.0 should be pretty much bug-free, and didn't really need any unit testing for the very limited use cases it covers. From Version 1.1.0 onwards, the code is massively more complex, has more inner interaction, every keeper has its own `DispatchQueue` and I am sure it's easy to uncover edge cases to make it crash. Please keep the bug reports coming!
-
 
 ## Version History
 
@@ -100,7 +97,6 @@ There might be some bugs. Version 1.0.0 should be pretty much bug-free, and didn
 
 - OSS-6 Create DispatchWorkItemKeeper
 
-
 ## Colophon
 
 [The official address for this package][0]
@@ -108,7 +104,6 @@ There might be some bugs. Version 1.0.0 should be pretty much bug-free, and didn
 [The git / package url][1]
 
 This package is created and maintained by [Misoservices Inc.][2] and is [licensed under the BSL-1.0: Boost Software License - Version 1.0][3].
-
 
 [0]: https://github.com/Misoservices/MisoDispatchWorkItemKeeper
 [1]: https://github.com/Misoservices/MisoDispatchWorkItemKeeper.git
