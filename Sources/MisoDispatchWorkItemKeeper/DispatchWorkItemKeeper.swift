@@ -75,7 +75,7 @@ public extension DispatchWorkItemKeeper {
     }
 }
 
-extension DispatchWorkItemKeeper : DispatchWorkItemKeeperProtocol {
+extension DispatchWorkItemKeeper: DispatchWorkItemKeeperProtocol {
     public var isRunning: Bool {
         self.inner.impl.isRunning
     }
