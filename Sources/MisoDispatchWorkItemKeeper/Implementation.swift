@@ -44,7 +44,8 @@ class Implementation {
         self.runSemaphore = -1
         self.stopRequested = true
 
-        let keptWorkItems: [DispatchWorkItem]? = self.workItems
+        guard self.workItems != nil else { return }
+        let keptWorkItems: [DispatchWorkItem] = self.workItems!
 
         if self.cancelAtStop {
             self.cancelAllOperations()
@@ -97,9 +98,10 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
 
         self.waitForNoAction()
         guard !self.stopRequested else { return }
+        guard self.workItems != nil else { return }
 
         self.stopRequested = true
-        let keptWorkItems: [DispatchWorkItem]? = self.workItems
+        let keptWorkItems: [DispatchWorkItem] = self.workItems!
 
         if cancelAtStop {
             self.cancelAllOperations()
@@ -220,11 +222,23 @@ private extension Implementation {
         }
     }
 
+    func removeFirst(useCopy: Bool, workItemsCopy: inout [DispatchWorkItem]) -> DispatchWorkItem? {
+        if useCopy {
+            if !workItemsCopy.isEmpty {
+                return workItemsCopy.removeFirst()
+            }
+        } else if !self.workItems!.isEmpty {
+            return self.workItems!.removeFirst()
+        }
+        return nil
+    }
+
     @discardableResult
     func waitForDone(canAbort: Bool,
-                     keptWorkItems: [DispatchWorkItem]?) -> Bool {
+                     keptWorkItems: [DispatchWorkItem]) -> Bool {
         var abort = false
-        var keptWorkItems = keptWorkItems       // Make a mutable copy
+        var workItemsCopy = keptWorkItems
+        let useCopy = self.workItems != nil
 
         var workItem: DispatchWorkItem?
         repeat {
@@ -233,35 +247,16 @@ private extension Implementation {
             // We cannot keep the queue locked while executing the work item, or else, we might deadlock
             // if that work item tries to keep a new one.
             self.queueSync {
-                if canAbort {
-                    if self.runSemaphore > 0 {
-                        abort = true
-                    }
-                    guard !abort else {
-                        self.stopRequested = false
-                        return
-                    }
-                }
-
-                if self.workItems != nil {
-                    if !self.workItems!.isEmpty {
-                        workItem = self.workItems!.removeFirst()
-                    }
-                } else if keptWorkItems != nil {
-                    if !keptWorkItems!.isEmpty {
-                        workItem = keptWorkItems!.removeFirst()
-                    }
-                } else if canAbort {
+                if canAbort && self.runSemaphore > 0 {
                     abort = true
+                } else {
+                    workItem = self.removeFirst(useCopy: useCopy, workItemsCopy: &workItemsCopy)
                 }
             }
-            if canAbort {
-                guard !abort else {
-                    self.stopRequested = false
-                    return abort
-                }
-            }
-            if let workItem = workItem {
+            if canAbort && abort {
+                self.stopRequested = false
+                return abort
+            } else if let workItem = workItem {
                 workItem.wait()
                 self.waitForNoAction()
             }
