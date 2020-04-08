@@ -14,7 +14,7 @@ Enter the `DispatchWorkItemKeeper`, which allows you to keep a `DispatchWorkItem
 
 ### Usage
 
-```
+```swift
 import MisoDispatchWorkItemKeeper
 
 struct MyView: View {
@@ -44,7 +44,7 @@ The jury is on the fence on `@State` life expectancy versus `.onAppear` and `.on
 
 The goal of this version is to have pending tasks run only when the `View` is on screen, and not merely when it's loaded.
 
-```
+```swift
 import MisoDispatchWorkItemKeeper
 
 struct MyView: View {
