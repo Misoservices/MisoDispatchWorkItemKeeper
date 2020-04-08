@@ -80,6 +80,13 @@ There might be some bugs. Version 1.0.0 should be pretty much bug-free, and didn
 
 ## Version History
 
+### 1.1.1 (2020-04-08)
+
+- OSS-25 OSS-59 Fix SonarCloud issues
+- OSS-45 OSS-60 Fix Codacy issues
+- OSS-56 Add automated code quality badges
+- OSS-57 Split MisoDispatchWorkItemKeeper files
+
 ### 1.1.0 (2020-04-06)
 
 - OSS-16 Make the keeper multithreaded and add extra basic features
