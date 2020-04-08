@@ -73,7 +73,7 @@ final class BasicTests: XCTestCase {
         exec()
         XCTAssertEqual(value, 2, "Work Items should be executed")
     }
-
+    
     func testRunModes() {
         XCTAssertTrue(DispatchWorkItemKeeper().isRunning, "Should start the keeper by default")
         XCTAssertFalse(DispatchWorkItemKeeper(.manual).isRunning, "If requesting manual operation, should not start the keeper on instantiation")
@@ -84,7 +84,7 @@ final class BasicTests: XCTestCase {
             label: "testCancelAtStop exec",
             qos: .background
         )
-
+        
         func simpleRun(cancelAtStop: Bool, queueLabel: String) -> Int {
             var value = 0
             func exec() {
@@ -107,7 +107,7 @@ final class BasicTests: XCTestCase {
             label: "testManual exec",
             qos: .background
         )
-
+        
         func simpleRun(count: Int, startBefore: Int, stopAfter: Int, queueLabel: String) -> Int {
             var value = 0
             func exec() {
@@ -138,13 +138,13 @@ final class BasicTests: XCTestCase {
         XCTAssertEqual(simpleRun(count: 12, startBefore: 1, stopAfter: 10,
                                  queueLabel: "testManual TenMiddle"), 10, "Should skip the first and last one")
     }
-
+    
     func testManualRestart() {
         let queue = DispatchQueue(
             label: "testManualRestart exec",
             qos: .background
         )
-
+        
         func simpleRun(count: Int, startBefore: Int, restartAfter: Int, cancel: Bool, queueLabel: String) -> Int {
             var value = 0
             func exec() {
@@ -191,7 +191,7 @@ final class BasicTests: XCTestCase {
             label: "testManualCount exec",
             qos: .background
         )
-
+        
         func simpleRun(count: Int, startBefore: Int, ignoredRestartAfter: Int, queueLabel: String) -> Int {
             var value = 0
             func exec() {
@@ -220,13 +220,13 @@ final class BasicTests: XCTestCase {
         XCTAssertEqual(simpleRun(count: 12, startBefore: 1, ignoredRestartAfter: 10,
                                  queueLabel: "testManualCount TenMiddle"), 11, "Should ignore the cancelling restart")
     }
-
+    
     func testCancelPending() {
         let queue = DispatchQueue(
             label: "testCancelPending exec",
             qos: .background
         )
-
+        
         func simpleRun(count: Int, cancelAfter: Int, queueLabel: String) -> Int {
             var value = 0
             func exec() {
@@ -252,13 +252,13 @@ final class BasicTests: XCTestCase {
         XCTAssertEqual(simpleRun(count: 12, cancelAfter: 10,
                                  queueLabel: "testCancelPending TenMiddle"), 1, "Should cancel after the first 11")
     }
-
+    
     func testAutoClean() {
         let queue = DispatchQueue(
             label: "testAutoClean exec",
             qos: .background
         )
-
+        
         func simpleRun(autoCleanCount: Int, queueLabel: String) -> Int {
             let keeper = DispatchWorkItemKeeper(autoCleanCount: autoCleanCount, queueLabel: queueLabel)
             for _ in 0..<25 {
@@ -277,13 +277,13 @@ final class BasicTests: XCTestCase {
         XCTAssertEqual(simpleRun(autoCleanCount: 30,
                                  queueLabel: "testAutoClean 30"), 25, "Should have never cleaned up")
     }
-
+    
     func testClean() {
         let queue = DispatchQueue(
             label: "testClean exec",
             qos: .background
         )
-
+        
         func simpleRun(cleanCount: Int, queueLabel: String) -> Int {
             let keeper = DispatchWorkItemKeeper(autoCleanCount: 9999, queueLabel: queueLabel)
             for i in 0..<25 {
@@ -308,7 +308,7 @@ final class BasicTests: XCTestCase {
         XCTAssertEqual(simpleRun(cleanCount: 30,
                                  queueLabel: "testClean 30"), 25, "Should have never cleaned up")
     }
-
+    
     static var allTests = [
         (".keep()", testKeep),
         (".async()", testAsync),

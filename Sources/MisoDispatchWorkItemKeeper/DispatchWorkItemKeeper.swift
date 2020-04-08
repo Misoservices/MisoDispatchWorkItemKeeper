@@ -64,12 +64,12 @@ public extension DispatchWorkItemKeeper {
     ///   - queueLabel: Name of the queue that handles the keeper operations
     ///
     init(_ runMode: RunMode = .automatic,
-                autoCleanCount: Int = 10,
-                cancelAtStop: Bool = true,
-                queueLabel: String = "com.misoservices.dispatchworkitemkeeper.queue.\(UUID().uuidString)")
+         autoCleanCount: Int = 10,
+         cancelAtStop: Bool = true,
+         queueLabel: String = "com.misoservices.dispatchworkitemkeeper.queue.\(UUID().uuidString)")
     {
         self.inner = InnerClass(autoCleanCount, cancelAtStop, queueLabel)
-
+        
         if runMode == .automatic {
             self.start()
         }
@@ -103,14 +103,14 @@ extension DispatchWorkItemKeeper : DispatchWorkItemKeeperProtocol {
                       block: @escaping ()->Void) -> DispatchWorkItem? {
         self.inner.impl.async(in: queue, block: block)
     }
-
+    
     @discardableResult
     public func asyncAfter(in queue: DispatchQueue,
                            deadline: DispatchTime,
                            block: @escaping ()->Void) -> DispatchWorkItem? {
         self.inner.impl.asyncAfter(in: queue, deadline: deadline, block: block)
     }
-
+    
     @discardableResult
     public func asyncAfter(in queue: DispatchQueue,
                            wallDeadline: DispatchWallTime,
