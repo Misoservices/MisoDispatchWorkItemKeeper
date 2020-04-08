@@ -138,7 +138,7 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
     
     @discardableResult
     func async(in queue: DispatchQueue,
-               block: @escaping ()->Void) -> DispatchWorkItem? {
+               block: @escaping () -> Void) -> DispatchWorkItem? {
         guard self.workItems != nil else { return nil }
         let workItem = self.keep(DispatchWorkItem(block: block))
         queue.async(execute: workItem)
@@ -148,7 +148,7 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
     @discardableResult
     func asyncAfter(in queue: DispatchQueue,
                     deadline: DispatchTime,
-                    block: @escaping ()->Void) -> DispatchWorkItem? {
+                    block: @escaping () -> Void) -> DispatchWorkItem? {
         guard self.workItems != nil else { return nil }
         let workItem = self.keep(DispatchWorkItem(block: block))
         queue.asyncAfter(deadline: deadline, execute: workItem)
@@ -158,7 +158,7 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
     @discardableResult
     func asyncAfter(in queue: DispatchQueue,
                     wallDeadline: DispatchWallTime,
-                    block: @escaping ()->Void) -> DispatchWorkItem? {
+                    block: @escaping () -> Void) -> DispatchWorkItem? {
         guard self.workItems != nil else { return nil }
         let workItem = self.keep(DispatchWorkItem(block: block))
         queue.asyncAfter(wallDeadline: wallDeadline, execute: workItem)
@@ -198,7 +198,7 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
 /// Every operation we do as part of the keeper internal tasks is bound to a `DispatchGroup` so we can tell
 /// whether we have a pending operation or not when we stop our processing.
 private extension Implementation {
-    func queueSync(block: @escaping ()->Void) {
+    func queueSync(block: @escaping () -> Void) {
         self.group.enter()
         self.queue.sync {
             block()
@@ -206,7 +206,7 @@ private extension Implementation {
         }
     }
     
-    func queueAsync(block: @escaping ()->Void) {
+    func queueAsync(block: @escaping () -> Void) {
         self.queue.async(group: self.group, execute: block)
     }
     

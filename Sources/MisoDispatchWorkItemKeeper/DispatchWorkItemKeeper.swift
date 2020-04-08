@@ -100,21 +100,21 @@ extension DispatchWorkItemKeeper : DispatchWorkItemKeeperProtocol {
     
     @discardableResult
     public func async(in queue: DispatchQueue,
-                      block: @escaping ()->Void) -> DispatchWorkItem? {
+                      block: @escaping () -> Void) -> DispatchWorkItem? {
         self.inner.impl.async(in: queue, block: block)
     }
     
     @discardableResult
     public func asyncAfter(in queue: DispatchQueue,
                            deadline: DispatchTime,
-                           block: @escaping ()->Void) -> DispatchWorkItem? {
+                           block: @escaping () -> Void) -> DispatchWorkItem? {
         self.inner.impl.asyncAfter(in: queue, deadline: deadline, block: block)
     }
     
     @discardableResult
     public func asyncAfter(in queue: DispatchQueue,
                            wallDeadline: DispatchWallTime,
-                           block: @escaping ()->Void) -> DispatchWorkItem? {
+                           block: @escaping () -> Void) -> DispatchWorkItem? {
         self.inner.impl.asyncAfter(in: queue, wallDeadline: wallDeadline, block: block)
     }
     

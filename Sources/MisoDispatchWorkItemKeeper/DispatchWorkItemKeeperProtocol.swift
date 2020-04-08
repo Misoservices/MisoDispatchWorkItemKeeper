@@ -73,7 +73,7 @@ public protocol DispatchWorkItemKeeperProtocol {
     ///
     @discardableResult
     func async(in queue: DispatchQueue,
-               block: @escaping ()->Void) -> DispatchWorkItem?
+               block: @escaping () -> Void) -> DispatchWorkItem?
     
     ///
     /// Submits a work item for asynchronous execution on a dispatch queue and safeguards it in case our calling
@@ -87,7 +87,7 @@ public protocol DispatchWorkItemKeeperProtocol {
     @discardableResult
     func asyncAfter(in queue: DispatchQueue,
                     deadline: DispatchTime,
-                    block: @escaping ()->Void) -> DispatchWorkItem?
+                    block: @escaping () -> Void) -> DispatchWorkItem?
     
     ///
     /// Submits a work item for asynchronous execution on a dispatch queue and safeguards it in case our calling
@@ -101,7 +101,7 @@ public protocol DispatchWorkItemKeeperProtocol {
     @discardableResult
     func asyncAfter(in queue: DispatchQueue,
                     wallDeadline: DispatchWallTime,
-                    block: @escaping ()->Void) -> DispatchWorkItem?
+                    block: @escaping () -> Void) -> DispatchWorkItem?
     
     ///
     /// Immediately cancels all the pending operations. An operation that is currently being run will not be affected.
