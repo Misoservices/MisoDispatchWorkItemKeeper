@@ -7,14 +7,14 @@ let package = Package(
     name: "MisoDispatchWorkItemKeeper",
     platforms: [.macOS(.v10_15),
                 .iOS(.v13),
-                .tvOS(.v13),
+                .tvOS(.v13)
                 //.watchOS(.v6) Disabled because testTarget cannot test for watchOS
     ],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
             name: "MisoDispatchWorkItemKeeper",
-            targets: ["MisoDispatchWorkItemKeeper"]),
+            targets: ["MisoDispatchWorkItemKeeper"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
