@@ -86,12 +86,12 @@ There might be some bugs. Version 1.0.0 should be pretty much bug-free, and didn
 ### 1.1.0 (2020-04-06)
 
 - OSS-16 Make the keeper multithreaded and add extra basic features
-  - OSS-19 Update Struct/Class paradigm of the Keeper to make it safe and not rely on a static dictionary
-  - OSS-20 Automatically clean up on multiple additions
-  - OSS-21 Code bound to a DispatchQueue, make operations asynchronous
-  - OSS-22 Work Items needs to be done executing before destructor exits
-  - OSS-23 Allow cancellation or not of Work Items at destruction
-  - OSS-24 Manual Init/Deinit for cases where the Keeper outlasts the usage
+    - OSS-19 Update Struct/Class paradigm of the Keeper to make it safe and not rely on a static dictionary
+    - OSS-20 Automatically clean up on multiple additions
+    - OSS-21 Code bound to a DispatchQueue, make operations asynchronous
+    - OSS-22 Work Items needs to be done executing before destructor exits
+    - OSS-23 Allow cancellation or not of Work Items at destruction
+    - OSS-24 Manual Init/Deinit for cases where the Keeper outlasts the usage
 - OSS-17 Add unit testing
 - OSS-18 Add CI
 
