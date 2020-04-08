@@ -17,7 +17,7 @@ class Implementation {
     let group = DispatchGroup()     ///< Checking whether we have operations pending
     
     private var runSemaphore: Int = 0
-    private var workItems: [DispatchWorkItem]? = nil
+    private var workItems: [DispatchWorkItem]?
     private var cleanRequested: Bool = false
     private var stopRequested: Bool = false
     
