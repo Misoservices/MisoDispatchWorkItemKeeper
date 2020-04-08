@@ -92,6 +92,7 @@ There might be some bugs. Version 1.0.0 should be pretty much bug-free, and didn
     - OSS-22 Work Items needs to be done executing before destructor exits
     - OSS-23 Allow cancellation or not of Work Items at destruction
     - OSS-24 Manual Init/Deinit for cases where the Keeper outlasts the usage
+    
 - OSS-17 Add unit testing
 - OSS-18 Add CI
 
