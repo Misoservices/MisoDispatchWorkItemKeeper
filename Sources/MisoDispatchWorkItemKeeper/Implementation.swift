@@ -44,41 +44,13 @@ class Implementation {
         self.runSemaphore = -1
         self.stopRequested = true
 
-        var keptWorkItems: [DispatchWorkItem]? = nil
+        let keptWorkItems: [DispatchWorkItem]? = self.workItems
 
         if self.cancelAtStop {
-            self.queueAsync {
-                if self.runSemaphore <= 0,
-                    let workItems = self.workItems {
-                    workItems.forEach { $0.cancel() }
-                    keptWorkItems = self.workItems
-                    self.workItems = nil
-                }
-            }
+            self.cancelAllOperations()
         }
         
-        var workItem: DispatchWorkItem?
-        repeat {
-            workItem = nil
-
-            // We cannot keep the queue locked while executing the work item, or else, we might deadlock
-            // if that work item tries to keep a new one.
-            self.queueSync {
-                if self.workItems != nil {
-                    if !self.workItems!.isEmpty {
-                        workItem = self.workItems!.removeFirst()
-                    }
-                } else if keptWorkItems != nil {
-                    if !keptWorkItems!.isEmpty {
-                        workItem = keptWorkItems!.removeFirst()
-                    }
-                }
-            }
-            if let workItem = workItem {
-                workItem.wait()
-                self.waitForNoAction()
-            }
-        } while workItem != nil
+        self.waitForDone(canAbort: false, keptWorkItems: keptWorkItems)
     }
 }
 
@@ -122,63 +94,21 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
         }
         
         guard doStop else { return }
+
+        self.waitForNoAction()
         guard !self.stopRequested else { return }
         
         self.stopRequested = true
-        var keptWorkItems: [DispatchWorkItem]? = nil
+        let keptWorkItems: [DispatchWorkItem]? = self.workItems
 
-        var cancel = false
         if cancelAtStop {
-            self.queueAsync {
-                if self.runSemaphore <= 0,
-                    let workItems = self.workItems {
-                    workItems.forEach { $0.cancel() }
-                    keptWorkItems = self.workItems
-                    self.workItems = nil
-                } else {
-                    cancel = true
-                }
-            }
+            self.cancelAllOperations()
         }
         
-        var workItem: DispatchWorkItem?
-        repeat {
-            workItem = nil
-
-            // We cannot keep the queue locked while executing the work item, or else, we might deadlock
-            // if that work item tries to keep a new one.
-            self.queueSync {
-                if self.runSemaphore > 0 {
-                    cancel = true
-                }
-                guard !cancel else {
-                    self.stopRequested = false
-                    return
-                }
-                if self.workItems != nil {
-                    if !self.workItems!.isEmpty {
-                        workItem = self.workItems!.removeFirst()
-                    }
-                } else if keptWorkItems != nil {
-                    if !keptWorkItems!.isEmpty {
-                        workItem = keptWorkItems!.removeFirst()
-                    }
-                } else {
-                    cancel = true
-                }
-            }
-            guard !cancel else {
-                self.stopRequested = false
-                return
-            }
-            if let workItem = workItem {
-                workItem.wait()
-                self.waitForNoAction()
-            }
-        } while workItem != nil && !cancel
+        let aborted = self.waitForDone(canAbort: true, keptWorkItems: keptWorkItems)
         
         self.queueSync {
-            if self.runSemaphore <= 0 && !cancel {
+            if self.runSemaphore <= 0 && !aborted {
                 self.workItems = nil
             }
             self.stopRequested = false
@@ -278,5 +208,65 @@ private extension Implementation {
 
     func queueAsync(block: @escaping ()->Void) {
         self.queue.async(group: self.group, execute: block)
+    }
+    
+    func cancelAllOperations() {
+        self.queueAsync {
+            if self.runSemaphore <= 0,
+                let workItems = self.workItems {
+                workItems.forEach { $0.cancel() }
+                self.workItems = nil
+            }
+        }
+    }
+    
+    @discardableResult
+    func waitForDone(canAbort: Bool,
+                     keptWorkItems: [DispatchWorkItem]?) -> Bool {
+        var abort = false
+        var keptWorkItems = keptWorkItems       // Make a mutable copy
+        
+        var workItem: DispatchWorkItem?
+        repeat {
+            workItem = nil
+
+            // We cannot keep the queue locked while executing the work item, or else, we might deadlock
+            // if that work item tries to keep a new one.
+            self.queueSync {
+                if canAbort {
+                    if self.runSemaphore > 0 {
+                        abort = true
+                    }
+                    guard !abort else {
+                        self.stopRequested = false
+                        return
+                    }
+                }
+                
+                if self.workItems != nil {
+                    if !self.workItems!.isEmpty {
+                        workItem = self.workItems!.removeFirst()
+                    }
+                } else if keptWorkItems != nil {
+                    if !keptWorkItems!.isEmpty {
+                        workItem = keptWorkItems!.removeFirst()
+                    }
+                } else if canAbort {
+                    abort = true
+                }
+            }
+            if canAbort {
+                guard !abort else {
+                    self.stopRequested = false
+                    return abort
+                }
+            }
+            if let workItem = workItem {
+                workItem.wait()
+                self.waitForNoAction()
+            }
+        } while workItem != nil && !abort
+        
+        return abort
     }
 }
