@@ -280,4 +280,3 @@ private extension Implementation {
         self.queue.async(group: self.group, execute: block)
     }
 }
-
