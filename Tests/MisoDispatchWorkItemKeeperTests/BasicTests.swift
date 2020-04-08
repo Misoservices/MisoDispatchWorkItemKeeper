@@ -214,11 +214,14 @@ final class BasicTests: XCTestCase {
             return value
         }
         XCTAssertEqual(simpleRun(count: 2, startBefore: 0, ignoredRestartAfter: 0,
-                                 queueLabel: "testManualCount StopAfterOne"), 2, "Should ignore the cancelling restart")
+                                 queueLabel: "testManualCount StopAfterOne"),
+                       2, "Should ignore the cancelling restart after first one")
         XCTAssertEqual(simpleRun(count: 3, startBefore: 1, ignoredRestartAfter: 1,
-                                 queueLabel: "testManualCount OnlyMiddle"), 2, "Should ignore the cancelling restart")
+                                 queueLabel: "testManualCount OnlyMiddle"),
+                       2, "Should ignore the cancelling restart after second one")
         XCTAssertEqual(simpleRun(count: 12, startBefore: 1, ignoredRestartAfter: 10,
-                                 queueLabel: "testManualCount TenMiddle"), 11, "Should ignore the cancelling restart")
+                                 queueLabel: "testManualCount TenMiddle"),
+                       11, "Should ignore the cancelling restart at the end")
     }
     
     func testCancelPending() {
