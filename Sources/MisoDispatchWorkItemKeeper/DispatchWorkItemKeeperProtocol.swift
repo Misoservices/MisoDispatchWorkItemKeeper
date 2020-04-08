@@ -15,7 +15,7 @@ public protocol DispatchWorkItemKeeperProtocol {
     /// Determine whether we are currently running or not
     ///
     var isRunning: Bool { get }
-    
+
     ///
     /// Returns the size of the current `DispatchWorkItem` array.
     ///
@@ -24,14 +24,14 @@ public protocol DispatchWorkItemKeeperProtocol {
     /// - warning: This operation is blocking for better accuracy
     ///
     var workItemsCount: Int { get }
-    
+
     ///
     /// Starts the keeper. This is done automatically when the `RunMode` is set to `.automatic`.
     ///
     /// - note: This operation is counted, you must do the same quantity of `stop()` than `start()` to stop the keeper.
     ///
     func start()
-    
+
     ///
     /// Stops the keeper. This is done automatically when the `DispatchWorkItemKeeper` gets deleted.
     ///
@@ -53,7 +53,7 @@ public protocol DispatchWorkItemKeeperProtocol {
     ///  - cancel: Override for cancellation
     ///
     func stop(cancel: Bool?)
-    
+
     ///
     /// Safeguards a new `DispatchWorkItem` in case our calling object gets deleted.
     /// - Parameters:
@@ -62,7 +62,7 @@ public protocol DispatchWorkItemKeeperProtocol {
     ///
     @discardableResult
     func keep(_ workItem: DispatchWorkItem) -> DispatchWorkItem
-    
+
     ///
     /// Submits a work item for asynchronous execution on a dispatch queue and safeguards it in case our calling
     /// object gets deleted. Will be executed after a specified delay.
@@ -74,7 +74,7 @@ public protocol DispatchWorkItemKeeperProtocol {
     @discardableResult
     func async(in queue: DispatchQueue,
                block: @escaping () -> Void) -> DispatchWorkItem?
-    
+
     ///
     /// Submits a work item for asynchronous execution on a dispatch queue and safeguards it in case our calling
     /// object gets deleted. Will be executed after a specified delay.
@@ -88,7 +88,7 @@ public protocol DispatchWorkItemKeeperProtocol {
     func asyncAfter(in queue: DispatchQueue,
                     deadline: DispatchTime,
                     block: @escaping () -> Void) -> DispatchWorkItem?
-    
+
     ///
     /// Submits a work item for asynchronous execution on a dispatch queue and safeguards it in case our calling
     /// object gets deleted. Will be executed after a specified delay.
@@ -102,12 +102,12 @@ public protocol DispatchWorkItemKeeperProtocol {
     func asyncAfter(in queue: DispatchQueue,
                     wallDeadline: DispatchWallTime,
                     block: @escaping () -> Void) -> DispatchWorkItem?
-    
+
     ///
     /// Immediately cancels all the pending operations. An operation that is currently being run will not be affected.
     ///
     func cancelPending()
-    
+
     ///
     /// Schedule a clean-up of the processed and cancelled operations
     ///

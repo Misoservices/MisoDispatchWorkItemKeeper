@@ -15,12 +15,12 @@ class Implementation {
     let cancelAtStop: Bool          ///< Cancel the pending items on stopping / deletion
     let queue: DispatchQueue        ///< Execution queue for `workItems` handling
     let group = DispatchGroup()     ///< Checking whether we have operations pending
-    
+
     private var runSemaphore: Int = 0
     private var workItems: [DispatchWorkItem]?
     private var cleanRequested: Bool = false
     private var stopRequested: Bool = false
-    
+
     init(_ autoCleanCount: Int,
          _ cancelAtStop: Bool,
          _ queueLabel: String) {
@@ -31,25 +31,25 @@ class Implementation {
             qos: .utility
         )
     }
-    
+
     private func waitForNoAction() {
         while self.group.wait(timeout: .now()) != .success {
             self.group.wait()
         }
     }
-    
+
     func finalStop() {
         self.waitForNoAction()
-        
+
         self.runSemaphore = -1
         self.stopRequested = true
-        
+
         let keptWorkItems: [DispatchWorkItem]? = self.workItems
-        
+
         if self.cancelAtStop {
             self.cancelAllOperations()
         }
-        
+
         self.waitForDone(canAbort: false, keptWorkItems: keptWorkItems)
     }
 }
@@ -58,7 +58,7 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
     var isRunning: Bool {
         self.workItems != nil
     }
-    
+
     var workItemsCount: Int {
         var result: Int = 0
         self.queueSync {
@@ -68,45 +68,45 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
         }
         return result
     }
-    
+
     func start() {
         self.queueSync {
             guard self.runSemaphore >= 0 else { return }
-            
+
             self.runSemaphore += 1
-            
+
             guard self.runSemaphore == 1 else { return }
-            
+
             self.workItems = [DispatchWorkItem]()
         }
     }
-    
+
     func stop(cancel cancelAtStopOverride: Bool?) {
         let cancelAtStop = cancelAtStopOverride ?? self.cancelAtStop
-        
+
         var doStop = false
         self.queueSync {
             if self.runSemaphore > 0 {
                 self.runSemaphore -= 1
             }
-            
+
             doStop = self.runSemaphore <= 0
         }
-        
+
         guard doStop else { return }
-        
+
         self.waitForNoAction()
         guard !self.stopRequested else { return }
-        
+
         self.stopRequested = true
         let keptWorkItems: [DispatchWorkItem]? = self.workItems
-        
+
         if cancelAtStop {
             self.cancelAllOperations()
         }
-        
+
         let aborted = self.waitForDone(canAbort: true, keptWorkItems: keptWorkItems)
-        
+
         self.queueSync {
             if self.runSemaphore <= 0 && !aborted {
                 self.workItems = nil
@@ -114,7 +114,7 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
             self.stopRequested = false
         }
     }
-    
+
     @discardableResult
     func keep(_ workItem: DispatchWorkItem) -> DispatchWorkItem {
         guard self.workItems != nil else {
@@ -126,16 +126,16 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
                 workItem.cancel()
                 return
             }
-            
+
             self.workItems!.append(workItem)
-            
+
             if self.workItems!.count > self.autoCleanCount {
                 self.clean()
             }
         }
         return workItem
     }
-    
+
     @discardableResult
     func async(in queue: DispatchQueue,
                block: @escaping () -> Void) -> DispatchWorkItem? {
@@ -144,7 +144,7 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
         queue.async(execute: workItem)
         return workItem
     }
-    
+
     @discardableResult
     func asyncAfter(in queue: DispatchQueue,
                     deadline: DispatchTime,
@@ -154,7 +154,7 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
         queue.asyncAfter(deadline: deadline, execute: workItem)
         return workItem
     }
-    
+
     @discardableResult
     func asyncAfter(in queue: DispatchQueue,
                     wallDeadline: DispatchWallTime,
@@ -164,32 +164,32 @@ extension Implementation: DispatchWorkItemKeeperProtocol {
         queue.asyncAfter(wallDeadline: wallDeadline, execute: workItem)
         return workItem
     }
-    
+
     func cancelPending() {
         self.queue.sync {
             guard let workItems = self.workItems else { return }
-            
+
             workItems.forEach { $0.cancel() }
             clean()
         }
     }
-    
+
     func clean() {
         guard self.workItems != nil else { return }
         guard !self.cleanRequested else { return }
-        
+
         self.cleanRequested = true
-        
+
         self.queueAsync {
             guard self.workItems != nil else { return }
-            
+
             self.workItems!.removeAll {
                 if $0.wait(timeout: .now()) == .success {
                     return true
                 }
                 return false
             }
-            
+
             self.cleanRequested = false
         }
     }
@@ -205,11 +205,11 @@ private extension Implementation {
             self.group.leave()
         }
     }
-    
+
     func queueAsync(block: @escaping () -> Void) {
         self.queue.async(group: self.group, execute: block)
     }
-    
+
     func cancelAllOperations() {
         self.queueAsync {
             if self.runSemaphore <= 0,
@@ -219,17 +219,17 @@ private extension Implementation {
             }
         }
     }
-    
+
     @discardableResult
     func waitForDone(canAbort: Bool,
                      keptWorkItems: [DispatchWorkItem]?) -> Bool {
         var abort = false
         var keptWorkItems = keptWorkItems       // Make a mutable copy
-        
+
         var workItem: DispatchWorkItem?
         repeat {
             workItem = nil
-            
+
             // We cannot keep the queue locked while executing the work item, or else, we might deadlock
             // if that work item tries to keep a new one.
             self.queueSync {
@@ -242,7 +242,7 @@ private extension Implementation {
                         return
                     }
                 }
-                
+
                 if self.workItems != nil {
                     if !self.workItems!.isEmpty {
                         workItem = self.workItems!.removeFirst()
@@ -266,7 +266,7 @@ private extension Implementation {
                 self.waitForNoAction()
             }
         } while workItem != nil && !abort
-        
+
         return abort
     }
 }

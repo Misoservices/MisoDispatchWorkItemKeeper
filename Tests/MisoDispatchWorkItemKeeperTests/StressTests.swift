@@ -8,7 +8,7 @@ final class StressTests: XCTestCase {
             label: "testDelayed exec",
             qos: .background
         )
-        
+
         func stressRun(cancelAtStop: Bool, queueLabel: String) -> Int {
             var value = 0
             func exec() {
@@ -29,14 +29,14 @@ final class StressTests: XCTestCase {
                                     queueLabel: "testDelayed cancelAtStop"),
                           requestCount, "Should not run all \(requestCount) instances")
     }
-    
+
     func testImmediate() {
         let requestCount = 5000
         let queue = DispatchQueue(
             label: "testImmediate exec",
             qos: .background
         )
-        
+
         func stressRun() -> Int {
             var value = 0
             func exec() {
@@ -52,7 +52,7 @@ final class StressTests: XCTestCase {
         }
         XCTAssertEqual(stressRun(), requestCount, "Should run all \(requestCount) instances")
     }
-    
+
     static var allTests = [
         ("Delayed async stress test", testDelayed),
         ("Immedate async stress test", testImmediate)

@@ -15,13 +15,13 @@ extension DispatchWorkItemKeeper {
     /// intermediate whose only goal is to deinit when our real owner is done.
     class InnerClass {
         var impl: Implementation
-        
+
         init(_ autoCleanCount: Int,
              _ cancelAtStop: Bool,
              _ queueLabel: String) {
             self.impl = Implementation(autoCleanCount, cancelAtStop, queueLabel)
         }
-        
+
         deinit {
             self.impl.finalStop()
         }
