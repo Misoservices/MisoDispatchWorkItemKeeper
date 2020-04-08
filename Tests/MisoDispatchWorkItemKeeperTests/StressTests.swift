@@ -55,6 +55,6 @@ final class StressTests: XCTestCase {
     
     static var allTests = [
         ("Delayed async stress test", testDelayed),
-        ("Immedate async stress test", testImmediate),
+        ("Immedate async stress test", testImmediate)
     ]
 }

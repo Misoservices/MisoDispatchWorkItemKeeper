@@ -330,6 +330,6 @@ final class BasicTests: XCTestCase {
         ("Manual Count", testManualCount),
         (".cancelPending()", testCancelPending),
         ("AutoClean", testAutoClean),
-        ("Clean", testClean),
+        ("Clean", testClean)
     ]
 }
