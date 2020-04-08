@@ -265,8 +265,12 @@ final class BasicTests: XCTestCase {
         func simpleRun(autoCleanCount: Int, queueLabel: String) -> Int {
             let keeper = DispatchWorkItemKeeper(autoCleanCount: autoCleanCount, queueLabel: queueLabel)
             for _ in 0..<25 {
-                keeper.async(in: queue) {}
-                queue.sync {}
+                keeper.async(in: queue) {
+                    // nop. Only wait to be in a state where keeper has processed its addition
+                }
+                queue.sync {
+                    // nop. Only wait for the execution queue to be empty
+                }
                 _ = keeper.workItemsCount
             }
             return keeper.workItemsCount
@@ -290,8 +294,12 @@ final class BasicTests: XCTestCase {
         func simpleRun(cleanCount: Int, queueLabel: String) -> Int {
             let keeper = DispatchWorkItemKeeper(autoCleanCount: 9999, queueLabel: queueLabel)
             for i in 0..<25 {
-                keeper.async(in: queue) {}
-                queue.sync {}
+                keeper.async(in: queue) {
+                    // nop. Only wait to be in a state where keeper has processed its addition
+                }
+                queue.sync {
+                    // nop. Only wait for the execution queue to be empty
+                }
                 _ = keeper.workItemsCount
                 if i+1 == cleanCount {
                     keeper.clean()
