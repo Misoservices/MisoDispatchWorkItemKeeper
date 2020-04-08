@@ -53,13 +53,14 @@ public extension DispatchWorkItemKeeper {
     }
     
     ///
-    /// Creates a keeper to keep track of asynchronous objects being used, so they can be properly handled before class deletion
+    /// Creates a keeper to keep track of asynchronous objects being used, so they can be properly handled
+    /// before class deletion
     /// - Parameters:
     ///   - runMode: Whether to start the keeper automatically at instantiation
-    ///   - autoCleanCount: Cleaning up objects is a complex task. it is not done automatically. If there are more than this
-    ///   number of objects (by default 10), it will schedule a cleanup.
-    ///   - cancelAtStop: Whether you wish to cancel pending operations when deinitializing / stopping the class, or wait for them
-    ///   to be deinitialized.
+    ///   - autoCleanCount: Cleaning up objects is a complex task. it is not done automatically. If there
+    ///   are more than this number of objects (by default 10), it will schedule a cleanup.
+    ///   - cancelAtStop: Whether you wish to cancel pending operations when deinitializing / stopping
+    ///   the class, or wait for them to be deinitialized.
     ///   - queueLabel: Name of the queue that handles the keeper operations
     ///
     init(_ runMode: RunMode = .automatic,

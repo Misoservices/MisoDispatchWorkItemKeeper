@@ -23,9 +23,11 @@ final class StressTests: XCTestCase {
             return value
         }
         XCTAssertEqual(stressRun(cancelAtStop: false,
-                                 queueLabel: "testDelayed not cancelAtStop"), requestCount, "Should run all \(requestCount) instances")
+                                 queueLabel: "testDelayed not cancelAtStop"),
+                       requestCount, "Should run all \(requestCount) instances")
         XCTAssertLessThan(stressRun(cancelAtStop: true,
-                                 queueLabel: "testDelayed cancelAtStop"), requestCount, "Should not run all \(requestCount) instances")
+                                 queueLabel: "testDelayed cancelAtStop"),
+                          requestCount, "Should not run all \(requestCount) instances")
     }
     
     func testImmediate() {

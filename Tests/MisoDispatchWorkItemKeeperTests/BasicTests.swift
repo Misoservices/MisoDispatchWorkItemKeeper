@@ -166,18 +166,24 @@ final class BasicTests: XCTestCase {
             return value
         }
         XCTAssertEqual(simpleRun(count: 2, startBefore: 0, restartAfter: 0, cancel: true,
-                                 queueLabel: "testManualRestart Cancel StopAfterOne"), 1, "Should cancel first and only start the second one")
+                                 queueLabel: "testManualRestart Cancel StopAfterOne"),
+                       1, "Should cancel first and only start the second one")
         XCTAssertEqual(simpleRun(count: 3, startBefore: 1, restartAfter: 1, cancel: true,
-                                 queueLabel: "testManualRestart Cancel OnlyMiddle"), 1, "Should cancel the middle one and only start the 3rd one")
+                                 queueLabel: "testManualRestart Cancel OnlyMiddle"),
+                       1, "Should cancel the middle one and only start the 3rd one")
         XCTAssertEqual(simpleRun(count: 12, startBefore: 1, restartAfter: 10, cancel: true,
-                                 queueLabel: "testManualRestart Cancel TenMiddle"), 1, "Should skip the first, cancel the middle ones and only start and last one")
+                                 queueLabel: "testManualRestart Cancel TenMiddle"),
+                       1, "Should skip the first, cancel the middle ones and only start and last one")
         
         XCTAssertEqual(simpleRun(count: 2, startBefore: 0, restartAfter: 0, cancel: false,
-                                 queueLabel: "testManualRestart StopAfterOne"), 2, "Should not cancel the first and do the second one")
+                                 queueLabel: "testManualRestart StopAfterOne"),
+                       2, "Should not cancel the first and do the second one")
         XCTAssertEqual(simpleRun(count: 3, startBefore: 1, restartAfter: 1, cancel: false,
-                                 queueLabel: "testManualRestart OnlyMiddle"), 2, "Should not cancel the middle one and do the 3rd one")
+                                 queueLabel: "testManualRestart OnlyMiddle"),
+                       2, "Should not cancel the middle one and do the 3rd one")
         XCTAssertEqual(simpleRun(count: 12, startBefore: 1, restartAfter: 10, cancel: false,
-                                 queueLabel: "testManualRestart TenMiddle"), 11, "Should skip the first, not cancel the middle ones and do the last one")
+                                 queueLabel: "testManualRestart TenMiddle"),
+                       11, "Should skip the first, not cancel the middle ones and do the last one")
     }
     
     func testManualCount() {
@@ -291,11 +297,14 @@ final class BasicTests: XCTestCase {
             return keeper.workItemsCount
         }
         XCTAssertLessThanOrEqual(simpleRun(cleanCount: 1,
-                                           queueLabel: "testClean 1"), 24, "Should have cleaned after 1 item, leaving 24")
+                                           queueLabel: "testClean 1"),
+                                 24, "Should have cleaned after 1 item, leaving 24")
         XCTAssertLessThanOrEqual(simpleRun(cleanCount: 10,
-                                           queueLabel: "testClean 10"), 15, "Should have cleaned after 10 items, leaving 15")
+                                           queueLabel: "testClean 10"),
+                                 15, "Should have cleaned after 10 items, leaving 15")
         XCTAssertLessThanOrEqual(simpleRun(cleanCount: 20,
-                                           queueLabel: "testClean 20"), 5, "Should have cleaned after 20 items, leaving 5")
+                                           queueLabel: "testClean 20"),
+                                 5, "Should have cleaned after 20 items, leaving 5")
         XCTAssertEqual(simpleRun(cleanCount: 30,
                                  queueLabel: "testClean 30"), 25, "Should have never cleaned up")
     }
