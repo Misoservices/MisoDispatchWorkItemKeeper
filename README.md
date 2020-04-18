@@ -80,6 +80,11 @@ There might be some bugs. Version 1.0.0 should be pretty much bug-free, and didn
 
 ## Version History
 
+### 1.1.2 (2020-04-17)
+
+- OSS-61 OSS-62 OSS-63 OSS-64 Fix Codacy issues
+- OSS-66 Bug: Crash on deinit in some edge cases
+
 ### 1.1.1 (2020-04-08)
 
 - OSS-25 OSS-59 Fix SonarCloud issues
