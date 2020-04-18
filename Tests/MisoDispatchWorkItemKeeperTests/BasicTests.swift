@@ -100,7 +100,8 @@ final class BasicTests: XCTestCase {
         XCTAssertEqual(simpleRun(cancelAtStop: true,
                                  queueLabel: "cancelAtStop"), 0, "Should cancel before quitting destructor")
         XCTAssertEqual(simpleRun(cancelAtStop: false,
-                                 queueLabel: "not cancelAtStop"), 1, "Should wait for execution before quitting destructor")
+                                 queueLabel: "not cancelAtStop"),
+                       1, "Should wait for execution before quitting destructor")
     }
 
     func testCancelPending() {
