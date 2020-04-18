@@ -76,7 +76,8 @@ final class BasicTests: XCTestCase {
 
     func testRunModes() {
         XCTAssertTrue(DispatchWorkItemKeeper().isRunning, "Should start the keeper by default")
-        XCTAssertFalse(DispatchWorkItemKeeper(.manual).isRunning, "If requesting manual operation, should not start the keeper on instantiation")
+        XCTAssertFalse(DispatchWorkItemKeeper(.manual).isRunning,
+                       "If requesting manual operation, should not start the keeper on instantiation")
     }
 
     func testCancelAtStop() {
