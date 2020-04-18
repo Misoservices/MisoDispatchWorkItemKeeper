@@ -227,7 +227,7 @@ private extension Implementation {
             if !workItemsCopy.isEmpty {
                 return workItemsCopy.removeFirst()
             }
-        } else if !self.workItems!.isEmpty {
+        } else if self.workItems != nil && !self.workItems!.isEmpty {
             return self.workItems!.removeFirst()
         }
         return nil
